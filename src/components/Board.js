@@ -3,11 +3,12 @@ import '../App.css';
 
 import Square from './Square';
 
-function Board({squares, handleClick}) {
+function Board({squares, winningSquares, handleClick}) {
 
     function renderSquare(i) {
         return <Square key={i}
         value={squares[i]} 
+        isWinningSquare={winningSquares.includes(i)}
         handleClick={() => handleClick(i)} />;
     }
 

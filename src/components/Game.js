@@ -7,7 +7,7 @@ import Moves from './Moves';
 function Game() {
 
         const [history, setHistory] = useState([
-                    { squares: Array(9).fill(null), location: null, moveNumber: -1, moveDescription: "Go to game start"  }
+                    { squares: Array(9).fill(null), location: null, moveNumber: -1, moveDescription: "Go to game start" }
                 ]);
         const [xIsNext, setXIsNext] = useState(true);
         const [stepNumber, setStepNumber] = useState(0);
@@ -15,26 +15,29 @@ function Game() {
         let status;
         const current = history[stepNumber];
         const squares = current.squares;
-        const winner = calculateWinner(squares);
+        const { winner, lines }  = calculateWinner(squares);
     
-        status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;    
+        const nextMove = `Next player: ${xIsNext ? 'X' : 'O'}`;
+        status = winner ? `Winner: ${winner}` : `${ history.length > 9 ? 'Match Drawn' : nextMove }`;    
 
     return (
         <div className="game">
           <div className="game-board">
             <Board
                 squares={squares}
+                winningSquares={lines}
                 handleClick={(i) => doThisOnHandleClick(i)} />
           </div>
           <div className="game-info">
-            <div>{status}</div>
+            <div className={winner ? "game-winner" : "game-info"}>{status}</div>
+            <div className="game-space"></div>
             <Moves history={history} setStepNumber={setStepNumber} setXIsNext={setXIsNext} setHistory={setHistory} />
           </div>
         </div>
       );
     
     function doThisOnHandleClick(i) {
-        if (calculateWinner(squares) || squares[i])
+        if (calculateWinner(squares).winner || squares[i])
             return;
 
         const nextSquares = squares.slice();
@@ -62,10 +65,10 @@ function Game() {
           for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-              return squares[a];
+              return { winner: squares[a], lines: lines[i] };
             }
           }
-          return null;
+          return { winner: null, lines: [] };
     }
 
     function calculateLocation(index) {

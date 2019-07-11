@@ -1,10 +1,10 @@
 import React from 'react';
 import '../App.css';
 
-function Square({value, handleClick}) {
+function Square({value, isWinningSquare, handleClick}) {
 
     return (
-        <button className="square" 
+        <button className={isWinningSquare ? "winner-square" : "square"} 
             onClick={handleClick}>
             {value}
         </button>
